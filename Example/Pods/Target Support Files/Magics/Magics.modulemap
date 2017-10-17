@@ -1,0 +1,6 @@
+framework module Magics {
+  umbrella header "Magics-umbrella.h"
+
+  export *
+  module * { export * }
+}
