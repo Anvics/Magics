@@ -14,6 +14,10 @@ open class MagicsAPI{
     
     open func modify<T: MagicsInteractor>(request: URLRequest, interactor: T) -> URLRequest { return request }
     
+    open func interact<T: MagicsInteractor>(_ interactor: T, completion: ((T, Error?) -> Void)? = nil){
+        perfromInteraction(interactor, completion: completion)
+    }
+    
     open func hasErrorFor<T: MagicsInteractor>(json: MagicsJSON?, response: URLResponse?, error: Error?, interactor: T) -> Error?{ return nil }
     
     open func process<T: MagicsInteractor>(json: MagicsJSON, response: URLResponse?, interactor: T){ }
@@ -26,18 +30,18 @@ open class MagicsAPI{
 
 //MARK: - Update & Extract
 public extension MagicsAPI{
-    open func update(model: MagicsModel, with json: MagicsJSON){
+    public func update(model: MagicsModel, with json: MagicsJSON){
         let parserToUse = type(of: model).customParser ?? parser
         parserToUse.update(object: model as! NSObject, with: json, api: self)
         model.update(key: nil, json: json, api: self)
     }
     
-    open func arrayFrom<T: MagicsModel>(json: MagicsJSON) -> [T]{
+    public func arrayFrom<T: MagicsModel>(json: MagicsJSON) -> [T]{
         let p = T.customParser ?? parser
         return p.extractFrom(json: json, objectsOfType: T.self, api: self) as! [T]
     }
     
-    open func objectFrom<T: MagicsModel>(json: MagicsJSON) -> T{
+    public func objectFrom<T: MagicsModel>(json: MagicsJSON) -> T{
         let model = T.init()
         update(model: model, with: json)
         return model
@@ -46,14 +50,14 @@ public extension MagicsAPI{
 
 //MARK: - perform
 public extension MagicsAPI{
-    open func interact<T: MagicsInteractor>(_ interactor: T, completion: ((T, Error?) -> Void)? = nil){
+    public func perfromInteraction<T: MagicsInteractor>(_ interactor: T, completion: ((T, Error?) -> Void)? = nil){
         let urlString = (baseURL + interactor.relativeURL).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         guard let urlStringU = urlString, let url = URL(string: urlStringU) else { fatalError() }
         var request = URLRequest(url: url)
         request.httpMethod = interactor.method.rawValue
         request = modify(request: request, interactor: interactor)
         request = interactor.modify(request: request)
-//        request.httpBody
+        //        request.httpBody
         
         MagicsJSON.loadWith(request: request) { json, response, error in
             if let error = self.hasErrorFor(json: json, response: response, error: error, interactor: interactor) ?? interactor.hasErrorFor(json: json, response: response, error: error){
@@ -80,6 +84,7 @@ public extension MagicsAPI{
                 }
             }
         }
+
     }
     
 //    func perform(_ pipe: MagicsPipe, completion: ((MagicsPipe, Error?) -> Void)? = nil){
