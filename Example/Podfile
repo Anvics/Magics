@@ -1,0 +1,6 @@
+use_frameworks!
+target 'Magics_Tests' do
+  pod 'Magics', :path => '../'
+  
+  
+end
