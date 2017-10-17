@@ -12,6 +12,8 @@ open class MagicsAPI{
     open var baseURL: String { return "" }
     public var parser: MagicsParser = MagicsParser()
     
+    public init(){}
+    
     open func modify<T: MagicsInteractor>(request: URLRequest, interactor: T) -> URLRequest { return request }
     
     open func interact<T: MagicsInteractor>(_ interactor: T, completion: ((T, Error?) -> Void)? = nil){
