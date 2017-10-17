@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class MagicsParser{
+open class MagicsParser{
     public static let shared = MagicsParser()
     
-    public func valueFrom(json: MagicsJSON, forObject object: Any) -> Any?{
+    open func valueFrom(json: MagicsJSON, forObject object: Any) -> Any?{
         if object is Int { return intFrom(json: json) }
         if object is Double { return doubleFrom(json: json) }
         if object is String { return stringFrom(json: json) }
         return nil
     }
     
-    public func intFrom(json: MagicsJSON) -> Int?{ return json.int }
-    public func doubleFrom(json: MagicsJSON) -> Double?{ return json.double }
-    public func stringFrom(json: MagicsJSON) -> String?{ return json.string }
+    open func intFrom(json: MagicsJSON) -> Int?{ return json.int }
+    open func doubleFrom(json: MagicsJSON) -> Double?{ return json.double }
+    open func stringFrom(json: MagicsJSON) -> String?{ return json.string }
     
-    public func extractFrom(json: MagicsJSON, objectsOfType type: MagicsModel.Type, api: MagicsAPI) -> [NSObject]{
+    open func extractFrom(json: MagicsJSON, objectsOfType type: MagicsModel.Type, api: MagicsAPI) -> [NSObject]{
         var array = [NSObject]()
         json.enumerate { key, jsonData in
             let object = type.init()
@@ -34,7 +34,7 @@ public class MagicsParser{
         return array
     }
     
-    public func update(object: NSObject, with json: MagicsJSON, api: MagicsAPI){
+    open func update(object: NSObject, with json: MagicsJSON, api: MagicsAPI){
         updateMirror(mirror: Mirror(reflecting: object), object: object, json: json, api: api)
     }
     

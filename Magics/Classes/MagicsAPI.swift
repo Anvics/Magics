@@ -8,36 +8,36 @@
 
 import Foundation
 
-public class MagicsAPI{
-    public var baseURL: String { return "" }
+open class MagicsAPI{
+    open var baseURL: String { return "" }
     public var parser: MagicsParser = MagicsParser()
     
-    public func modify<T: MagicsInteractor>(request: URLRequest, interactor: T) -> URLRequest { return request }
+    open func modify<T: MagicsInteractor>(request: URLRequest, interactor: T) -> URLRequest { return request }
     
-    public func hasErrorFor<T: MagicsInteractor>(json: MagicsJSON?, response: URLResponse?, error: Error?, interactor: T) -> Error?{ return nil }
+    open func hasErrorFor<T: MagicsInteractor>(json: MagicsJSON?, response: URLResponse?, error: Error?, interactor: T) -> Error?{ return nil }
     
-    public func process<T: MagicsInteractor>(json: MagicsJSON, response: URLResponse?, interactor: T){ }
-    public func completed<T: MagicsInteractor>(interactor: T, json: MagicsJSON?, response: URLResponse?){ }
+    open func process<T: MagicsInteractor>(json: MagicsJSON, response: URLResponse?, interactor: T){ }
+    open func completed<T: MagicsInteractor>(interactor: T, json: MagicsJSON?, response: URLResponse?){ }
     
-    public func process<T: MagicsInteractor>(error: Error, response: URLResponse?, interactor: T){ }
+    open func process<T: MagicsInteractor>(error: Error, response: URLResponse?, interactor: T){ }
     
-    public func finish<T: MagicsInteractor>(interactor: T, error: Error?, response: URLResponse?, completion: ((T, Error?) -> Void)?){ completion?(interactor, error) }
+    open func finish<T: MagicsInteractor>(interactor: T, error: Error?, response: URLResponse?, completion: ((T, Error?) -> Void)?){ completion?(interactor, error) }
 }
 
 //MARK: - Update & Extract
 public extension MagicsAPI{
-    public func update(model: MagicsModel, with json: MagicsJSON){
+    open func update(model: MagicsModel, with json: MagicsJSON){
         let parserToUse = type(of: model).customParser ?? parser
         parserToUse.update(object: model as! NSObject, with: json, api: self)
         model.update(key: nil, json: json, api: self)
     }
     
-    public func arrayFrom<T: MagicsModel>(json: MagicsJSON) -> [T]{
+    open func arrayFrom<T: MagicsModel>(json: MagicsJSON) -> [T]{
         let p = T.customParser ?? parser
         return p.extractFrom(json: json, objectsOfType: T.self, api: self) as! [T]
     }
     
-    public func objectFrom<T: MagicsModel>(json: MagicsJSON) -> T{
+    open func objectFrom<T: MagicsModel>(json: MagicsJSON) -> T{
         let model = T.init()
         update(model: model, with: json)
         return model
@@ -46,7 +46,7 @@ public extension MagicsAPI{
 
 //MARK: - perform
 public extension MagicsAPI{
-    public func interact<T: MagicsInteractor>(_ interactor: T, completion: ((T, Error?) -> Void)? = nil){
+    open func interact<T: MagicsInteractor>(_ interactor: T, completion: ((T, Error?) -> Void)? = nil){
         let urlString = (baseURL + interactor.relativeURL).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         guard let urlStringU = urlString, let url = URL(string: urlStringU) else { fatalError() }
         var request = URLRequest(url: url)
