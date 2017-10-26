@@ -63,7 +63,9 @@ open class MagicsParser{
 
     private func classTypeFromArray(_ array: Any) -> MagicsModel.Type?{
         let arrayTypeName = "\(type(of: array))"
-        let objectTypeName = arrayTypeName.mgcs_substring(from: 6, length: arrayTypeName.characters.count - 7)
+        let index = arrayTypeName.mgcs_indexes(of: ".")[1]
+        let uncleanedTypeName = arrayTypeName.substring(from: index)
+        let objectTypeName = uncleanedTypeName.mgcs_substring(from: 1, length: uncleanedTypeName.characters.count - 2)
         return classTypeFrom(objectTypeName) as? MagicsModel.Type
     }
 }
@@ -86,6 +88,16 @@ extension String{
     func mgcs_substring(to: Int) -> String {
         let toIndex = mgcs_index(from: to)
         return substring(to: toIndex)
+    }
+    
+    func mgcs_indexes(of string: String, options: CompareOptions = .literal) -> [Index] {
+        var result: [Index] = []
+        var start = startIndex
+        while let range = range(of: string, options: options, range: start..<endIndex) {
+            result.append(range.lowerBound)
+            start = range.upperBound
+        }
+        return result
     }
 }
 
