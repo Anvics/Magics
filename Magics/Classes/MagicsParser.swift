@@ -63,9 +63,7 @@ open class MagicsParser{
 
     private func classTypeFromArray(_ array: Any) -> MagicsModel.Type?{
         let arrayTypeName = "\(type(of: array))"
-        let index = arrayTypeName.mgcs_indexes(of: ".")[1]
-        let uncleanedTypeName = arrayTypeName.substring(from: index)
-        let objectTypeName = uncleanedTypeName.mgcs_substring(from: 1, length: uncleanedTypeName.characters.count - 2)
+        let objectTypeName = arrayTypeName.mgcs_substring(from: 6, length: arrayTypeName.characters.count - 7)
         return classTypeFrom(objectTypeName) as? MagicsModel.Type
     }
 }
