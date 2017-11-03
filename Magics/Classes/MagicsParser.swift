@@ -15,12 +15,14 @@ open class MagicsParser{
         if object is Int { return intFrom(json: json) }
         if object is Double { return doubleFrom(json: json) }
         if object is String { return stringFrom(json: json) }
+        if object is Bool { return boolFrom(json: json) }
         return nil
     }
     
     open func intFrom(json: MagicsJSON) -> Int?{ return json.int }
     open func doubleFrom(json: MagicsJSON) -> Double?{ return json.double }
     open func stringFrom(json: MagicsJSON) -> String?{ return json.string }
+    open func boolFrom(json: MagicsJSON) -> Bool?{ return json.bool }
     
     open func extractFrom(json: MagicsJSON, objectsOfType type: MagicsModel.Type, api: MagicsAPI) -> [NSObject]{
         var array = [NSObject]()
