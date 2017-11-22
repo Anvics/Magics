@@ -39,13 +39,13 @@ public class MagicsGenerator: MagicsInteractor{
             }
             let name = relativeURL.components(separatedBy: "/").last!.capitalized + "Interactor"
             self.inputObject = "struct \(name)Input{\n\(keys)}"
-            self.initMethod = "   let inputObject: InputObject\n\n   override init() { fatalError() }\n\n   init(input: \(name)Input){\n       inputObject = input\n   }\n\n"
+            self.initMethod = "   let inputObject: \(name)Object\n\n   override init() { fatalError() }\n\n   init(input: \(name)Input){\n       inputObject = input\n   }\n\n"
             self.interactorModifyRequestBody = "   func modify(request: URLRequest) -> URLRequest{\n       var req = request\n       req.setJSONBody(with: [\n\(requestKeys)\n         ])\n       return req\n    }"
         }else{
             self.modifyRequestBlock = nil
             inputObject = ""
             self.interactorModifyRequestBody = ""
-            self.initMethod = "   override init() {}\n"
+            self.initMethod = "   override required init() {}\n"
         }
         
     }
@@ -62,7 +62,7 @@ public class MagicsGenerator: MagicsInteractor{
         print(inputObject + "\n")
         print("class \(className()): NSObject, MagicsInteractor, MagicsModel {")
         print("   var relativeURL: String { return \"\(relativeURL)\" }")
-        print("   let method = .\(method)\n")
+        print("   var method: MagicsMethod { return .\(method) }\n")
         var process = ""
         if json.isArray || json.isBaseDictionaryArray{
             print("    var items = [\(addClassFrom(json: json, name: "item", hasKey: false))]()")
@@ -136,8 +136,8 @@ public class MagicsGenerator: MagicsInteractor{
     }
     
     public func modify(request: URLRequest) -> URLRequest {
-        if let mod = modifyRequestBlock{
-            return mod(request)
+        if let modifyRequest = modifyRequestBlock{
+            return modifyRequest(request)
         }
         return request
     }
