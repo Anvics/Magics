@@ -134,6 +134,13 @@ public class MagicsGenerator: MagicsInteractor{
         //        print(json)
         //        print(response)
     }
+    
+    public func modify(request: URLRequest) -> URLRequest {
+        if let mod = modifyRequestBlock{
+            return mod(request)
+        }
+        return request
+    }
 }
 
 extension MagicsJSON{
