@@ -118,7 +118,7 @@ public class MagicsGenerator: MagicsInteractor{
         
         classString += "class \(className): NSObject, MagicsModel{\n"
         classString += classBodyFrom(json: jsonToUse, hasKey: hasKey)
-        classString += "   override init() {}\n}\n"
+        classString += "   override required init() {}\n}\n"
         
         generatedClassesStrings.append(classString)
         
