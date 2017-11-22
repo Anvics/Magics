@@ -10,8 +10,8 @@ import Foundation
 
 public class MagicsGenerator: MagicsInteractor{
     
-    let relativeURL: String
-    let method: MagicsMethod
+    public let relativeURL: String
+    public let method: MagicsMethod
     
     let modifyRequestBlock: ((URLRequest) -> URLRequest)?
     let inputObject: String
@@ -57,7 +57,7 @@ public class MagicsGenerator: MagicsInteractor{
     private var generatedClassesStrings = [String]()
     private var classNames = [String]()
     
-    func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI){
+    public func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI){
         print("-------------------------------------------")
         print(inputObject + "\n")
         print("class \(className()): NSObject, MagicsInteractor, MagicsModel {")
@@ -125,11 +125,11 @@ public class MagicsGenerator: MagicsInteractor{
         return className
     }
     
-    func process(error: Error, response: URLResponse?){
+    public func process(error: Error, response: URLResponse?){
         print("\(relativeURL) failed")
     }
     
-    func completedWith(json: MagicsJSON?, response: URLResponse?){
+    public func completedWith(json: MagicsJSON?, response: URLResponse?){
         print("----------------------")
         //        print(json)
         //        print(response)
