@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MagicsGenerator: MagicsInteractor{
+public class MagicsGenerator: MagicsInteractor{
     
     let relativeURL: String
     let method: MagicsMethod
@@ -19,7 +19,7 @@ class MagicsGenerator: MagicsInteractor{
     let interactorModifyRequestBody: String
     let ignoredProperties: [String]
     
-    init(relativeURL: String, method: MagicsMethod = .get, requestJSONParams: [String: Any]? = nil, ignoredProperties: [String] = []) {
+    public init(relativeURL: String, method: MagicsMethod = .get, requestJSONParams: [String: Any]? = nil, ignoredProperties: [String] = []) {
         self.relativeURL = relativeURL
         self.method = method
         self.ignoredProperties = ignoredProperties
