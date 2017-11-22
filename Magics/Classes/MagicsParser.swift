@@ -71,6 +71,10 @@ open class MagicsParser{
 }
 
 extension String{
+    func dropLastS() -> String{
+        return hasSuffix("s") ? mgcs_substring(to: characters.count - 1) : self
+    }
+    
     func mgcs_index(from: Int) -> Index {
         return self.index(startIndex, offsetBy: from)
     }
@@ -98,6 +102,12 @@ extension String{
             start = range.upperBound
         }
         return result
+    }
+}
+
+public extension URLRequest {
+    public mutating func setJSONBody(with parameters: [String: Any]) {
+        httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
     }
 }
 
