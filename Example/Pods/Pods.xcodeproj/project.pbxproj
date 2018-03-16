@@ -107,8 +107,8 @@
 			children = (
 				1ED3C8301F9621470013BA7C /* MagicsAPI.swift */,
 				1ED3C8311F9621470013BA7C /* MagicsInteractor.swift */,
-				1ED3C8321F9621470013BA7C /* MagicsJSON.swift */,
 				1ED3C8331F9621470013BA7C /* MagicsModel.swift */,
+				1ED3C8321F9621470013BA7C /* MagicsJSON.swift */,
 				1ED3C8341F9621470013BA7C /* MagicsParser.swift */,
 				1ED3C8351F9621470013BA7C /* MagicsPipe.swift */,
 				1ED3C8361F9621470013BA7C /* MagicsTypes.swift */,

@@ -65,14 +65,14 @@ open class MagicsParser{
 
     private func classTypeFromArray(_ array: Any) -> MagicsModel.Type?{
         let arrayTypeName = "\(type(of: array))"
-        let objectTypeName = arrayTypeName.mgcs_substring(from: 6, length: arrayTypeName.characters.count - 7)
+        let objectTypeName = arrayTypeName.mgcs_substring(from: 6, length: arrayTypeName.count - 7)
         return classTypeFrom(objectTypeName) as? MagicsModel.Type
     }
 }
 
 extension String{
     func dropLastS() -> String{
-        return hasSuffix("s") ? mgcs_substring(to: characters.count - 1) : self
+        return hasSuffix("s") ? mgcs_substring(to: count - 1) : self
     }
     
     func mgcs_index(from: Int) -> Index {
@@ -81,17 +81,16 @@ extension String{
 
     func mgcs_substring(from: Int) -> String {
         let fromIndex = mgcs_index(from: from)
-        return substring(from: fromIndex)
+        return String(self[fromIndex..<endIndex])
     }
 
     func mgcs_substring(from: Int, length: Int) -> String {
-        let fromIndex = mgcs_index(from: from)
-        return substring(from: fromIndex).mgcs_substring(to: length)
+        return mgcs_substring(from: from).mgcs_substring(to: length)
     }
 
     func mgcs_substring(to: Int) -> String {
         let toIndex = mgcs_index(from: to)
-        return substring(to: toIndex)
+        return String(self[startIndex..<toIndex])
     }
     
     func mgcs_indexes(of string: String, options: CompareOptions = .literal) -> [Index] {
@@ -114,7 +113,7 @@ public extension URLRequest {
 func classTypeFrom(_ className: String) -> AnyClass!{
     if  let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
         // generate the full name of your class (take a look into your "YourProject-swift.h" file)
-        let classStringName = "_TtC\(appName.characters.count)\(appName)\(className.characters.count)\(className)"
+        let classStringName = "_TtC\(appName.count)\(appName)\(className.count)\(className)"
         // return the class!
         return NSClassFromString(classStringName)
     }

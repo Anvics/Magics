@@ -63,15 +63,15 @@ public class MagicsGenerator: MagicsInteractor{
         print("class \(className()): NSObject, MagicsInteractor, MagicsModel {")
         print("   var relativeURL: String { return \"\(relativeURL)\" }")
         print("   var method: MagicsMethod { return .\(method) }\n")
-        var process = ""
+//        var process = ""
         if json.isArray || json.isBaseDictionaryArray{
-            print("    var items = [\(addClassFrom(json: json, name: "item", hasKey: false))]()")
-            process = "    func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI){\n    items = api.arrayFrom(json: json)\n }"
+            print("    @objc dynamic var items = [\(addClassFrom(json: json, name: "item", hasKey: false))]()")
+//            process = "    func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI){\n    items = api.arrayFrom(json: json)\n }"
         }else{
             print(classBodyFrom(json: json))
         }
         
-        print(initMethod + interactorModifyRequestBody + process)
+        print(initMethod + interactorModifyRequestBody)
         print("}\n\n")
         generatedClassesStrings.reversed().forEach{ print($0) }
     }
@@ -82,7 +82,7 @@ public class MagicsGenerator: MagicsInteractor{
         json.enumerate { key, json in
             guard let key = key else { fatalError() }
             if self.ignoredProperties.contains(key) { return }
-            body += "   var \(key) = "
+            body += "   @objc dynamic var \(key) = "
             if json.isArray || json.isBaseDictionaryArray{
                 body += "[\(self.addClassFrom(json: json, name: key.dropLastS(), hasKey: json.isBaseDictionaryArray))]()"
             }else if json.isDictionary{
@@ -116,7 +116,7 @@ public class MagicsGenerator: MagicsInteractor{
         if classNames.contains(className) { return className }
         classNames.append(className)
         
-        classString += "class \(className): NSObject, MagicsModel{\n"
+        classString += "public class \(className): NSObject, MagicsModel{\n"
         classString += classBodyFrom(json: jsonToUse, hasKey: hasKey)
         classString += "   override required init() {}\n}\n"
         
