@@ -8,8 +8,9 @@
 
 import Foundation
 
-public protocol MagicsInteractor{
+public protocol MagicsInteractor: MagicsUpdatable{
     var relativeURL: String { get }
+    var api: MagicsAPI { get }
     
     var method: MagicsMethod { get }
 
@@ -20,16 +21,13 @@ public protocol MagicsInteractor{
     func modify(request: URLRequest) -> URLRequest
     
     /// Если запрос прошел неуспешно, верните ошибку
-    func hasErrorFor(json: MagicsJSON?, response: URLResponse?, error: Error?) -> Error?
-    
-    /// Вызывается в случае успешного выполнения и если есть json. Выполняется на потоке, указанном в processThread
-    func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI)
+    func hasErrorFor(json: MagicsJSON?, response: URLResponse?, error: MagicsError?) -> MagicsError?
     
     /// Всегда вызывается в случае успешного выполнения. Выполняется на потоке, указанном в completionThread
     func completedWith(json: MagicsJSON?, response: URLResponse?)
     
     /// Вызывается в случае неуспешного выполнения. Выполняется на потоке, указанном в processThread
-    func process(error: Error, response: URLResponse?)
+    func process(error: MagicsError, response: URLResponse?)
 }
 
 public extension MagicsInteractor{
@@ -39,10 +37,14 @@ public extension MagicsInteractor{
 
     func modify(request: URLRequest) -> URLRequest { return request }
     
-    func hasErrorFor(json: MagicsJSON?, response: URLResponse?, error: Error?) -> Error? { return error }
+    func hasErrorFor(json: MagicsJSON?, response: URLResponse?, error: MagicsError?) -> MagicsError? { return nil }
     
     func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI) { }
-    func process(error: Error, response: URLResponse?) { }
+    func process(error: MagicsError, response: URLResponse?) { }
 
     func completedWith(json: MagicsJSON?, response: URLResponse?) { }
+    
+    func interact(completion: ((MagicsError?) -> Void)? = nil){
+        api.interact(self, completion: completion)
+    }
 }

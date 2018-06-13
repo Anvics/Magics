@@ -30,7 +30,7 @@ open class MagicsParser{
             let object = type.init()
             let nsobject = object as! NSObject
             self.update(object: nsobject, with: jsonData, api: api)
-            object.update(key: key, json: jsonData, api: api)
+            object.process(key: key, json: jsonData, api: api)
             array.append(nsobject)
         }
         return array
@@ -105,8 +105,25 @@ extension String{
 }
 
 public extension URLRequest {
-    public mutating func setJSONBody(with parameters: [String: Any]) {
+    mutating func setJSONBody(with parameters: [String: Any], shouldPrintJSON: Bool = false) {
         httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
+        if shouldPrintJSON { print((try? JSONSerialization.jsonObject(with: httpBody!, options: .allowFragments)) ?? "Failed to convert to json parameters: \(parameters)") }
+        setValue("application/json", forHTTPHeaderField: "Content-Type")
+    }
+    
+    mutating func setFormDataBody(with parameters: [String: String]) {
+        httpBody = dataToFormData(params: parameters).data(using: .utf8)
+        setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+    }
+    
+    func dataToFormData(params: [String : String]) -> String {
+        var data = [String]()
+        for(key, value) in params {
+            data.append(key + "=\(value)")
+        }
+        let formData = data.map { String($0) }.joined(separator: "&")
+        print("dataToFormData: " + formData)
+        return formData
     }
 }
 

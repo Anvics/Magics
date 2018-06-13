@@ -8,10 +8,11 @@
 
 import Foundation
 
-public class MagicsGenerator: MagicsInteractor{
+public class MagicsGenerator: NSObject, MagicsInteractor{
     
     public let relativeURL: String
     public let method: MagicsMethod
+    public let api = MagicsAPI()
     
     let modifyRequestBlock: ((URLRequest) -> URLRequest)?
     let inputObject: String
@@ -19,8 +20,8 @@ public class MagicsGenerator: MagicsInteractor{
     let interactorModifyRequestBody: String
     let ignoredProperties: [String]
     
-    public init(relativeURL: String, method: MagicsMethod = .get, requestJSONParams: [String: Any]? = nil, ignoredProperties: [String] = []) {
-        self.relativeURL = relativeURL
+    public init(URL: String, method: MagicsMethod = .get, requestJSONParams: [String: Any]? = nil, ignoredProperties: [String] = []) {
+        self.relativeURL = URL
         self.method = method
         self.ignoredProperties = ignoredProperties
         
@@ -57,7 +58,7 @@ public class MagicsGenerator: MagicsInteractor{
     private var generatedClassesStrings = [String]()
     private var classNames = [String]()
     
-    public func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI){
+    public func process(key: String?, json: MagicsJSON, api: MagicsAPI){
         print("-------------------------------------------")
         print(inputObject + "\n")
         print("class \(className()): NSObject, MagicsInteractor, MagicsModel {")
@@ -118,7 +119,7 @@ public class MagicsGenerator: MagicsInteractor{
         
         classString += "public class \(className): NSObject, MagicsModel{\n"
         classString += classBodyFrom(json: jsonToUse, hasKey: hasKey)
-        classString += "   override required init() {}\n}\n"
+        classString += "   override required public init() {}\n}\n"
         
         generatedClassesStrings.append(classString)
         

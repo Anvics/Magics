@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E17E90E20D1650700FFBB25 /* MagicsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E17E90D20D1650700FFBB25 /* MagicsError.swift */; };
 		1E9E4F5D1FC593D5005CCC03 /* MagicsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9E4F5C1FC593D5005CCC03 /* MagicsGenerator.swift */; };
 		1ED3C8371F9621470013BA7C /* MagicsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED3C8301F9621470013BA7C /* MagicsAPI.swift */; };
 		1ED3C8381F9621470013BA7C /* MagicsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED3C8311F9621470013BA7C /* MagicsInteractor.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E17E90D20D1650700FFBB25 /* MagicsError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MagicsError.swift; path = Magics/Classes/MagicsError.swift; sourceTree = "<group>"; };
 		1E9E4F5C1FC593D5005CCC03 /* MagicsGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MagicsGenerator.swift; path = Magics/Classes/MagicsGenerator.swift; sourceTree = "<group>"; };
 		1ED3C8301F9621470013BA7C /* MagicsAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MagicsAPI.swift; path = Magics/Classes/MagicsAPI.swift; sourceTree = "<group>"; };
 		1ED3C8311F9621470013BA7C /* MagicsInteractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MagicsInteractor.swift; path = Magics/Classes/MagicsInteractor.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 		30200A769DA98A68EB60B9FB98E62816 /* Magics */ = {
 			isa = PBXGroup;
 			children = (
+				1E17E90D20D1650700FFBB25 /* MagicsError.swift */,
 				1ED3C8301F9621470013BA7C /* MagicsAPI.swift */,
 				1ED3C8311F9621470013BA7C /* MagicsInteractor.swift */,
 				1ED3C8331F9621470013BA7C /* MagicsModel.swift */,
@@ -293,6 +296,7 @@
 				1ED3C83C1F9621470013BA7C /* MagicsPipe.swift in Sources */,
 				1ED3C8371F9621470013BA7C /* MagicsAPI.swift in Sources */,
 				1ED3C83A1F9621470013BA7C /* MagicsModel.swift in Sources */,
+				1E17E90E20D1650700FFBB25 /* MagicsError.swift in Sources */,
 				1ED3C83D1F9621470013BA7C /* MagicsTypes.swift in Sources */,
 				1ED3C83B1F9621470013BA7C /* MagicsParser.swift in Sources */,
 				719972A55D7614ABBBF22465437D21E8 /* Magics-dummy.m in Sources */,
