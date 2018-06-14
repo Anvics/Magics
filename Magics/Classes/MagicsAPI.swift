@@ -14,20 +14,20 @@ open class MagicsAPI{
     
     public init(){}
     
-    open func modify<T: MagicsInteractor>(request: URLRequest, interactor: T) -> URLRequest { return request }
+    open func modify(request: URLRequest, interactor: MagicsInteractor) -> URLRequest { return request }
     
-    open func interact<T: MagicsInteractor>(_ interactor: T, completion: ((MagicsError?) -> Void)? = nil){
+    open func interact(_ interactor: MagicsInteractor, completion: ((MagicsError?) -> Void)? = nil){
         perfromInteraction(interactor, completion: completion)
     }
     
-    open func hasErrorFor<T: MagicsInteractor>(json: MagicsJSON?, response: URLResponse?, error: MagicsError?, interactor: T) -> MagicsError?{ return error }
+    open func hasErrorFor(json: MagicsJSON?, response: URLResponse?, error: MagicsError?, interactor: MagicsInteractor) -> MagicsError?{ return error }
     
-    open func process<T: MagicsInteractor>(json: MagicsJSON, response: URLResponse?, interactor: T){ }
-    open func completed<T: MagicsInteractor>(interactor: T, json: MagicsJSON?, response: URLResponse?){ }
+    open func process(json: MagicsJSON, response: URLResponse?, interactor: MagicsInteractor){ }
+    open func completed(interactor: MagicsInteractor, json: MagicsJSON?, response: URLResponse?){ }
     
-    open func process<T: MagicsInteractor>(error: MagicsError, response: URLResponse?, interactor: T){ }
+    open func process(error: MagicsError, response: URLResponse?, interactor: MagicsInteractor){ }
     
-    open func finish<T: MagicsInteractor>(interactor: T, error: MagicsError?, response: URLResponse?, completion: ((MagicsError?) -> Void)?){ completion?(error) }
+    open func finish(interactor: MagicsInteractor, error: MagicsError?, response: URLResponse?, completion: ((MagicsError?) -> Void)?){ completion?(error) }
     
     open func isAuthorizationError(_ error: MagicsError) -> Bool{ return false }
 }
@@ -59,7 +59,7 @@ public extension MagicsAPI{
 
 //MARK: - perform
 public extension MagicsAPI{
-    public func perfromInteraction<T: MagicsInteractor>(_ interactor: T, completion: ((MagicsError?) -> Void)? = nil){
+    public func perfromInteraction(_ interactor: MagicsInteractor, completion: ((MagicsError?) -> Void)? = nil){
         let urlString = (baseURL + interactor.relativeURL).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         guard let urlStringU = urlString, let url = URL(string: urlStringU) else { fatalError() }
         var request = URLRequest(url: url)
