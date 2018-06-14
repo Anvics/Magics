@@ -28,6 +28,8 @@ open class MagicsAPI{
     open func process<T: MagicsInteractor>(error: MagicsError, response: URLResponse?, interactor: T){ }
     
     open func finish<T: MagicsInteractor>(interactor: T, error: MagicsError?, response: URLResponse?, completion: ((MagicsError?) -> Void)?){ completion?(error) }
+    
+    open func isAuthorizationError(_ error: MagicsError) -> Bool{ return false }
 }
 
 //MARK: - Update & Extract
