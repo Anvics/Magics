@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Magics'
-  s.version          = '2.0.4'
+  s.version          = '2.1.0'
   s.summary          = 'Magic server communications'
 
   s.description      = <<-DESC
@@ -20,7 +20,7 @@ Magics is a library that makes client-server communication looks like a magic. I
   s.author           = { 'Nikita Arkhipov' => 'nikitarkhipov@gmail.com' }
   s.source           = { :git => 'https://github.com/Anvics/Magics.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'Magics/Classes/**/*'
   
