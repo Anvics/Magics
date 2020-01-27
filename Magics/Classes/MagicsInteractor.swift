@@ -38,8 +38,7 @@ public extension MagicsInteractor{
     func modify(request: URLRequest) -> URLRequest { return request }
     
     func hasErrorFor(json: MagicsJSON?, response: URLResponse?, error: MagicsError?) -> MagicsError? { return nil }
-    
-    func process(json: MagicsJSON, response: URLResponse?, api: MagicsAPI) { }
+        
     func process(error: MagicsError, response: URLResponse?) { }
 
     func completedWith(json: MagicsJSON?, response: URLResponse?) { }

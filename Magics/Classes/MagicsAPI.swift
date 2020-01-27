@@ -34,23 +34,23 @@ open class MagicsAPI{
 
 //MARK: - Update & Extract
 public extension MagicsAPI{
-    public func update(interactor: MagicsUpdatable, with json: MagicsJSON){
+    func update(interactor: MagicsUpdatable, with json: MagicsJSON){
         parser.update(object: interactor as! NSObject, with: json, api: self)
         interactor.process(key: nil, json: json, api: self)
     }
     
-    public func update(model: MagicsModel, with json: MagicsJSON){
+    func update(model: MagicsModel, with json: MagicsJSON){
         let p = type(of: model).customParser ?? parser
         p.update(object: model as! NSObject, with: json, api: self)
         model.process(key: nil, json: json, api: self)
     }
     
-    public func arrayFrom<T: MagicsModel>(json: MagicsJSON) -> [T]{
+    func arrayFrom<T: MagicsModel>(json: MagicsJSON) -> [T]{
         let p = T.customParser ?? parser
         return p.extractFrom(json: json, objectsOfType: T.self, api: self) as! [T]
     }
     
-    public func objectFrom<T: MagicsModel>(json: MagicsJSON) -> T{
+    func objectFrom<T: MagicsModel>(json: MagicsJSON) -> T{
         let model = T.init()
         update(interactor: model, with: json)
         return model
@@ -59,7 +59,7 @@ public extension MagicsAPI{
 
 //MARK: - perform
 public extension MagicsAPI{
-    public func perfromInteraction(_ interactor: MagicsInteractor, completion: ((MagicsError?) -> Void)? = nil){
+    func perfromInteraction(_ interactor: MagicsInteractor, completion: ((MagicsError?) -> Void)? = nil){
         let urlString = (baseURL + interactor.relativeURL).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         guard let urlStringU = urlString, let url = URL(string: urlStringU) else { fatalError() }
         var request = URLRequest(url: url)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class MagicsError: Error {
+open class MagicsError: Error {
     public let code: Int
     public let message: String
 
