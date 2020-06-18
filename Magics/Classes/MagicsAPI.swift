@@ -58,7 +58,9 @@ open class MagicsAPI{
             if isReAuthorizing { return }
             isReAuthorizing = true
             interact(reauth) { e in
-                self.reauthQueue.forEach { $0(e) }
+                for c in self.reauthQueue{
+                    c(e)
+                }
                 self.isReAuthorizing = false
             }
             return
