@@ -17,6 +17,9 @@ open class MagicsError: Error {
         self.message = message
     }
     
+    open var isNoNetwork: Bool { code == -1009 }
+    open var couldNotConnectToServer: Bool { code == -1004 }
+    
     public static func fromError(_ error: Error?) -> MagicsError?{
         guard let error = error as NSError? else { return nil }
         return MagicsError(code: error.code, message: error.description)

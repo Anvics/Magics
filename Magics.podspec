@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Magics'
-  s.version          = '2.1.2'
+  s.version          = '2.2.0'
   s.summary          = 'Magic server communications'
 
   s.description      = <<-DESC

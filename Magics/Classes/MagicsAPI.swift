@@ -26,10 +26,52 @@ open class MagicsAPI{
     open func completed(interactor: MagicsInteractor, json: MagicsJSON?, response: URLResponse?){ }
     
     open func process(error: MagicsError, response: URLResponse?, interactor: MagicsInteractor){ }
+        
+    open func isTokenError(_ error: MagicsError) -> Bool { return false }
+    open func reauthorizeInteractor(for interactor: MagicsInteractor) -> MagicsInteractor? { return nil }
+    open func shouldReauthorize(interactor: MagicsInteractor, error: MagicsError) -> Bool { return true }
+    open func shouldDelayAndRetry(for interactor: MagicsInteractor, error: MagicsError) -> Bool { return false }
+    open func delayInterval(for interactor: MagicsInteractor, error: MagicsError) -> TimeInterval { 4.0 }
     
-    open func finish(interactor: MagicsInteractor, error: MagicsError?, response: URLResponse?, completion: ((MagicsError?) -> Void)?){ completion?(error) }
+    typealias InteractionCompletion = (MagicsError?) -> Void
+    private var reauthQueue = [InteractionCompletion]()
+    private var isReAuthorizing = false
+
+    open func finish(interactor: MagicsInteractor, error: MagicsError?, response: URLResponse?, completion: ((MagicsError?) -> Void)?){
+        guard let err = error else{
+            completion?(error)
+            return
+        }
+        
+        if shouldDelayAndRetry(for: interactor, error: err){
+            delay(by: delayInterval(for: interactor, error: err)) {
+                self.interact(interactor, completion: completion)
+            }
+            return
+        }
+        
+        if let reauth = reauthorizeInteractor(for: interactor), isTokenError(err) && shouldReauthorize(interactor: interactor, error: err) {
+            reauthQueue.append { e in
+                if e == nil { self.interact(interactor, completion: completion) }
+                else { completion?(e) }
+            }
+            if isReAuthorizing { return }
+            isReAuthorizing = true
+            interact(reauth) { e in
+                self.reauthQueue.forEach { $0(e) }
+                self.isReAuthorizing = false
+            }
+            return
+        }
+        completion?(err)
+    }
     
-    open func isAuthorizationError(_ error: MagicsError) -> Bool{ return false }
+    private func delay(by seconds: TimeInterval, block: @escaping () -> ()){
+        let delayTime = DispatchTime.now() + Double(Int64(seconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
+            block()
+        }
+    }
 }
 
 //MARK: - Update & Extract
@@ -106,7 +148,7 @@ public extension MagicsAPI{
 //                }
 //            }
 //        }
-//        
+//
 //        performAt(index: 0)
 //    }
     
