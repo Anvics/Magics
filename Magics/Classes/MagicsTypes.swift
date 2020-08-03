@@ -13,6 +13,7 @@ public enum MagicsMethod: String {
     case post = "POST"
     case update = "UPDATE"
     case delete = "DELETE"
+    case patch = "PATCH"
 }
 
 public enum MagicsThread{

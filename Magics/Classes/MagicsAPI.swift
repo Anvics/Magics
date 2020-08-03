@@ -9,7 +9,7 @@
 import Foundation
 
 open class MagicsAPI{
-    open var baseURL: String { return "" }
+    open var baseURL: String = ""
     public var parser: MagicsParser = MagicsParser()
     
     public init(){}
@@ -30,6 +30,8 @@ open class MagicsAPI{
     open func isTokenError(_ error: MagicsError) -> Bool { return false }
     open func reauthorizeInteractor(for interactor: MagicsInteractor) -> MagicsInteractor? { return nil }
     open func shouldReauthorize(interactor: MagicsInteractor, error: MagicsError) -> Bool { return true }
+    open func reauthorizeFailed(interactor: MagicsInteractor, error: MagicsError) { }
+    
     open func shouldDelayAndRetry(for interactor: MagicsInteractor, error: MagicsError) -> Bool { return false }
     open func delayInterval(for interactor: MagicsInteractor, error: MagicsError) -> TimeInterval { 4.0 }
     
@@ -58,6 +60,7 @@ open class MagicsAPI{
             if isReAuthorizing { return }
             isReAuthorizing = true
             interact(reauth) { e in
+                if let e = e { self.reauthorizeFailed(interactor: interactor, error: e) }
                 for c in self.reauthQueue{
                     c(e)
                 }
