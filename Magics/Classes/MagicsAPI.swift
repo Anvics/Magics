@@ -31,6 +31,7 @@ open class MagicsAPI{
     open func reauthorizeInteractor(for interactor: MagicsInteractor) -> MagicsInteractor? { return nil }
     open func shouldReauthorize(interactor: MagicsInteractor, error: MagicsError) -> Bool { return true }
     open func reauthorizeFailed(interactor: MagicsInteractor, error: MagicsError) { }
+    open func reauthorizeSuccess(interactor: MagicsInteractor) { }
     
     open func shouldDelayAndRetry(for interactor: MagicsInteractor, error: MagicsError) -> Bool { return false }
     open func delayInterval(for interactor: MagicsInteractor, error: MagicsError) -> TimeInterval { 4.0 }
@@ -61,6 +62,7 @@ open class MagicsAPI{
             isReAuthorizing = true
             interact(reauth) { e in
                 if let e = e { self.reauthorizeFailed(interactor: interactor, error: e) }
+                else { self.reauthorizeSuccess(interactor: interactor) }
                 for c in self.reauthQueue{
                     c(e)
                 }
@@ -122,6 +124,7 @@ public extension MagicsAPI{
                     interactor.process(error: error, response: response)
                 }
                 self.performOn(thread: interactor.completionThread) {
+                    interactor.completedWith(json: json, response: response)
                     self.finish(interactor: interactor, error: error, response: response, completion: completion)
                 }
             }else{
