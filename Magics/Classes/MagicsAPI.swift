@@ -29,7 +29,10 @@ open class MagicsAPI{
         
     open func isTokenError(_ error: MagicsError) -> Bool { return false }
     open func reauthorizeInteractor(for interactor: MagicsInteractor) -> MagicsInteractor? { return nil }
+    open func minimumIntervalForReuthorization(for interactor: MagicsInteractor) -> TimeInterval{ return 60 }
     open func shouldReauthorize(interactor: MagicsInteractor, error: MagicsError) -> Bool { return true }
+    
+    open func reauthorizeStarted(interactor: MagicsInteractor, error: MagicsError) { }
     open func reauthorizeFailed(interactor: MagicsInteractor, error: MagicsError) { }
     open func reauthorizeSuccess(interactor: MagicsInteractor) { }
     
@@ -37,12 +40,23 @@ open class MagicsAPI{
     open func delayInterval(for interactor: MagicsInteractor, error: MagicsError) -> TimeInterval { 4.0 }
     
     typealias InteractionCompletion = (MagicsError?) -> Void
+    private var lastReauthDate: Date?
     private var reauthQueue = [InteractionCompletion]()
-    private var isReAuthorizing = false
+    private var reathInteractor: MagicsInteractor?
+    
+    private func isRightTimingForReauth(for interactor: MagicsInteractor) -> Bool{
+        guard let d = lastReauthDate else { return true }
+        return Date().timeIntervalSince(d) > minimumIntervalForReuthorization(for: interactor)
+    }
 
     open func finish(interactor: MagicsInteractor, error: MagicsError?, response: URLResponse?, completion: ((MagicsError?) -> Void)?){
-        guard let err = error else{
+        if reathInteractor?.isEqual(interactor) ?? false { //if thats reauth intercator – complete imidiately
             completion?(error)
+            return
+        }
+        
+        guard let err = error else{ //if everything is ok, nothing to check
+            completion?(nil)
             return
         }
         
@@ -53,24 +67,31 @@ open class MagicsAPI{
             return
         }
         
-        if let reauth = reauthorizeInteractor(for: interactor), isTokenError(err) && shouldReauthorize(interactor: interactor, error: err) {
-            reauthQueue.append { e in
-                if e == nil { self.interact(interactor, completion: completion) }
-                else { completion?(e) }
-            }
-            if isReAuthorizing { return }
-            isReAuthorizing = true
-            interact(reauth) { e in
-                if let e = e { self.reauthorizeFailed(interactor: interactor, error: e) }
-                else { self.reauthorizeSuccess(interactor: interactor) }
-                for c in self.reauthQueue{
-                    c(e)
-                }
-                self.isReAuthorizing = false
-            }
+        guard isTokenError(err) && shouldReauthorize(interactor: interactor, error: err) else { completion?(err); return }
+        // Token error section. Reauthorizing..
+        
+        reauthQueue.append { e in
+            if e == nil { self.interact(interactor, completion: completion) }
+            else { completion?(e) }
+        }
+        
+        if reathInteractor != nil { return } //If already reauthroizing, we should wait for first reauth completion..
+        guard let reauth = reauthorizeInteractor(for: interactor), isRightTimingForReauth(for: interactor) else {
+            completion?(err)
             return
         }
-        completion?(err)
+        
+        lastReauthDate = Date()
+        reathInteractor = reauth
+        interact(reauth) { e in
+            if let e = e { self.reauthorizeFailed(interactor: interactor, error: e) }
+            else { self.reauthorizeSuccess(interactor: interactor) }
+            for c in self.reauthQueue{
+                c(e)
+            }
+            self.reathInteractor = nil
+            self.reauthQueue = []
+        }
     }
     
     private func delay(by seconds: TimeInterval, block: @escaping () -> ()){

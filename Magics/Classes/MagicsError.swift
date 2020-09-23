@@ -37,8 +37,12 @@ open class MagicsError: Error {
     }
 }
 
-extension MagicsError: Equatable{
+extension MagicsError: Equatable, CustomStringConvertible{
     public static func == (lhs: MagicsError, rhs: MagicsError) -> Bool{
         return lhs.code == rhs.code
+    }
+    
+    public var description: String{
+        return "\(code): \(message)"
     }
 }
